@@ -1,5 +1,6 @@
 "use client"
 
+import type { JSX } from "react";
 import React, { useState, useEffect } from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -52,19 +53,29 @@ export default function Home() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
 
-  const calculateTimeLeft = () => {
-    const targetDateStr = localStorage.getItem("countdownTarget");
-    let targetDate;
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
 
-    if (!targetDateStr) {
-      // Set initial target date (29 days, 6 hours, 59 minutes from now)
-      targetDate = new Date();
-      targetDate.setDate(targetDate.getDate() + 29);
-      targetDate.setHours(targetDate.getHours() + 6);
-      targetDate.setMinutes(targetDate.getMinutes() + 59);
-      localStorage.setItem("countdownTarget", targetDate.toISOString());
-    } else {
-      targetDate = new Date(targetDateStr);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const targetDateStr = localStorage.getItem("countdownTarget");
+      let newTargetDate;
+
+      if (!targetDateStr) {
+        // Set initial target date (29 days from now)
+        newTargetDate = new Date();
+        newTargetDate.setHours(0, 0, 0, 0); // Reset to midnight
+        newTargetDate.setDate(newTargetDate.getDate() + 29); // Add 29 days
+        localStorage.setItem("countdownTarget", newTargetDate.toISOString());
+      } else {
+        newTargetDate = new Date(targetDateStr);
+      }
+      setTargetDate(newTargetDate);
+    }
+  }, []);
+
+  const calculateTimeLeft = () => {
+    if (!targetDate) {
+      return { days: 29, hours: 0, minutes: 0, seconds: 0 };
     }
 
     const now = new Date();
@@ -74,28 +85,31 @@ export default function Home() {
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
-    return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / (1000 * 60)) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
-    };
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
   };
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
+    // Update initial time left when target date changes
+    setTimeLeft(calculateTimeLeft());
+    
     const timer = setInterval(() => {
       const newTimeLeft = calculateTimeLeft();
       setTimeLeft(newTimeLeft);
 
-      if (Object.values(newTimeLeft).every((v) => v === 0)) {
+      if (newTimeLeft && Object.values(newTimeLeft).every((v) => v === 0)) {
         clearInterval(timer);
       }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [targetDate]); // Add targetDate as dependency
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,25 +151,25 @@ export default function Home() {
                 <div className="grid grid-cols-4 sm:flex gap-2 sm:gap-3">
                   <div className="bg-purple-800 px-2 sm:px-3 py-1 rounded">
                     <span className="text-lg sm:text-xl font-bold">
-                      {timeLeft.days}
+                      {timeLeft?.days ?? 0}
                     </span>
                     <span className="text-xs sm:text-sm ml-1">days</span>
                   </div>
                   <div className="bg-purple-800 px-2 sm:px-3 py-1 rounded">
                     <span className="text-lg sm:text-xl font-bold">
-                      {timeLeft.hours}
+                      {timeLeft?.hours ?? 0}
                     </span>
                     <span className="text-xs sm:text-sm ml-1">hrs</span>
                   </div>
                   <div className="bg-purple-800 px-2 sm:px-3 py-1 rounded">
                     <span className="text-lg sm:text-xl font-bold">
-                      {timeLeft.minutes}
+                      {timeLeft?.minutes ?? 0}
                     </span>
                     <span className="text-xs sm:text-sm ml-1">min</span>
                   </div>
                   <div className="bg-purple-800 px-2 sm:px-3 py-1 rounded">
                     <span className="text-lg sm:text-xl font-bold">
-                      {timeLeft.seconds}
+                      {timeLeft?.seconds ?? 0}
                     </span>
                     <span className="text-xs sm:text-sm ml-1">sec</span>
                   </div>
