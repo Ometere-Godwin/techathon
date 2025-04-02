@@ -114,21 +114,17 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically send the data to your backend
-    // For now, we'll just simulate a successful submission
     setIsSubmitted(true);
     toast({
       title: "Registration Successful!",
-      description: "Please proceed to payment to secure your spot.",
+      description: "Redirecting to confirmation page...",
     });
+    // Navigate to success page
+    // window.location.href = "/success";
   };
 
   const handlePayment = async () => {
-    // Here you would integrate with your payment provider (e.g., Paystack, Flutterwave)
-    // For now, we'll just show a toast
-    toast({
-      title: "Redirecting to payment...",
-      description: "You will be redirected to our secure payment page.",
-    });
+    window.location.href = "/payment";
   };
 
   const heroImages = [
