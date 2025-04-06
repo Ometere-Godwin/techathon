@@ -30,29 +30,29 @@ export default function PaymentPage() {
             {/* Bank Account Cards */}
             <div className="space-y-4">
               <Card className="p-6 border-2 border-purple-100">
-                <h2 className="text-xl font-semibold text-purple-900 mb-4">First Bank</h2>
+                <h2 className="text-xl font-semibold text-purple-900 mb-4">United Bank for Africa</h2>
                 <div className="space-y-2">
                   <p className="flex justify-between">
                     <span className="text-gray-600">Account Name:</span>
-                    <span className="font-medium">TechArthon Limited</span>
+                    <span className="font-medium">TECHEDU SKILLUP LIMITED</span>
                   </p>
                   <p className="flex justify-between">
                     <span className="text-gray-600">Account Number:</span>
-                    <span className="font-medium">0123456789</span>
+                    <span className="font-medium">1028114830</span>
                   </p>
                 </div>
               </Card>
 
               <Card className="p-6 border-2 border-purple-100">
-                <h2 className="text-xl font-semibold text-purple-900 mb-4">UBA Bank</h2>
+                <h2 className="text-xl font-semibold text-purple-900 mb-4">United Bank for Africa</h2>
                 <div className="space-y-2">
                   <p className="flex justify-between">
                     <span className="text-gray-600">Account Name:</span>
-                    <span className="font-medium">TechArthon Limited</span>
+                    <span className="font-medium">TECHEDU SKILLUP LIMITED</span>
                   </p>
                   <p className="flex justify-between">
                     <span className="text-gray-600">Account Number:</span>
-                    <span className="font-medium">9876543210</span>
+                    <span className="font-medium">3004771006</span>
                   </p>
                 </div>
               </Card>
@@ -62,7 +62,7 @@ export default function PaymentPage() {
             <div className="mt-8 p-4 bg-purple-50 rounded-lg">
               <h3 className="text-sm font-semibold text-purple-900 mb-2">Important Note:</h3>
               <p className="text-sm text-gray-600">
-                After making the payment, please save your payment receipt. You will need it for verification.
+                After making the payment, please save your payment receipt and send it to this phone number: 08137627522. You will need it for verification.
               </p>
             </div>
           </div>
