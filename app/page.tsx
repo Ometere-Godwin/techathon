@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useForm } from "@formspree/react";
 import React, { useState, useEffect } from "react";
@@ -30,6 +30,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 // import { useToast } from "@/components/ui/use-toast";
 
 // Icon wrapper to prevent hydration issues
@@ -87,7 +88,9 @@ export default function Home() {
     }
 
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
@@ -99,7 +102,7 @@ export default function Home() {
   useEffect(() => {
     // Update initial time left when target date changes
     setTimeLeft(calculateTimeLeft());
-    
+
     const timer = setInterval(() => {
       const newTimeLeft = calculateTimeLeft();
       setTimeLeft(newTimeLeft);
@@ -113,19 +116,6 @@ export default function Home() {
   }, [targetDate]); // Add targetDate as dependency
 
   const [formspreeState, submitToFormspree] = useForm("mdkgwoej");
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   // Here you would typically send the data to your backend
-  //   setIsSubmitted(true);
-  //   toast({
-  //     title: "Registration Successful!",
-  //     description: "Redirecting to confirmation page...",
-  //   });
-  //   // Navigate to success page
-  //   // window.location.href = "/success";
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await submitToFormspree(formData);
@@ -143,9 +133,9 @@ export default function Home() {
   };
 
   const heroImages = [
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?auto=format&fit=crop&q=80",
+    "/assets/teenagers.jpeg",
+    "/assets/boys.jpeg",
+    "/assets/girl.jpeg",
   ];
 
   return (
@@ -203,7 +193,7 @@ export default function Home() {
         </div>
 
         {/* Hero Section */}
-        <div className="relative h-[600px]">
+        <div className="relative h-[700px]">
           <Swiper
             modules={[Autoplay, Navigation, Pagination]}
             navigation
@@ -213,22 +203,30 @@ export default function Home() {
             className="h-full"
           >
             {heroImages.map((image, index) => (
-              <SwiperSlide key={index}>
-                <img
-                  src={image}
-                  alt={`Students learning ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
+              <SwiperSlide key={index} className="relative">
+                <div className="relative w-full h-[700px]">
+                  <Image
+                    src={image}
+                    alt={`Students learning ${index + 1}`}
+                    className="object-cover"
+                    fill
+                    sizes="100vw"
+                    priority={index === 0}
+                    quality={100}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-black/40 z-10"></div>
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30">
-            <div className="text-center px-4">
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+            <div className="text-center px-4 pointer-events-auto">
               <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 animate-bounce-slow uppercase tracking-wider">
                 SKILLUP TECHATHON 2025
               </h1>
               <p className="text-xl md:text-xl text-white mb-4 max-w-2xl mx-auto">
-                Transform your future with our interactive Frontend & UI/UX program!
+                Transform your future with our interactive Frontend & UI/UX
+                program!
               </p>
               {/* <p className="text-lg text-white mb-8 max-w-2xl mx-auto">
                 <IconWrapper icon={Globe} className="inline-block w-5 h-5 mr-2" />
@@ -283,21 +281,21 @@ export default function Home() {
                       </div>
 
                       <div className="space-y-2">
-  <Label htmlFor="track">Select Track</Label>
-  <select
-    id="track"
-    value={formData.track}
-    onChange={(e) =>
-      setFormData({ ...formData, track: e.target.value })
-    }
-    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-    required
-  >
-    <option value="">Select a track</option>
-    <option value="frontend">Frontend Development</option>
-    <option value="uiux">UI/UX Design</option>
-  </select>
-</div>
+                        <Label htmlFor="track">Select Track</Label>
+                        <select
+                          id="track"
+                          value={formData.track}
+                          onChange={(e) =>
+                            setFormData({ ...formData, track: e.target.value })
+                          }
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          required
+                        >
+                          <option value="">Select a track</option>
+                          <option value="frontend">Frontend Development</option>
+                          <option value="uiux">UI/UX Design</option>
+                        </select>
+                      </div>
                       <div className="space-y-2">
                         <Label htmlFor="age">Age</Label>
                         <Input
@@ -416,10 +414,11 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {/* Frontend Development Track */}
               <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80"
                   alt="Frontend Development"
                   className="w-full h-48 object-cover"
+                  fill
                 />
                 <div className="p-8">
                   <div className="flex items-center mb-6">
@@ -436,7 +435,9 @@ export default function Home() {
                       <h4 className="text-xl font-semibold text-purple-900 mb-2">
                         Course Duration
                       </h4>
-                      <p className="text-gray-700">3 months intensive training</p>
+                      <p className="text-gray-700">
+                        3 months intensive training
+                      </p>
                       <p className="text-purple-600 mt-1">
                         <IconWrapper
                           icon={Globe}
@@ -471,15 +472,24 @@ export default function Home() {
                       </ul>
                     </div>
                   </div>
+                  <Button
+                    className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-white"
+                    onClick={() => {
+                      setFormData({ ...formData, track: "frontend" });
+                      document.getElementById("mainRegisterButton")?.click();
+                    }}
+                  >
+                    Register for Frontend Track
+                  </Button>
                 </div>
               </div>
-
               {/* UI/UX Design Track */}
               <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80"
                   alt="UI/UX Design"
                   className="w-full h-48 object-cover"
+                  fill
                 />
                 <div className="p-8">
                   <div className="flex items-center mb-6">
@@ -496,7 +506,9 @@ export default function Home() {
                       <h4 className="text-xl font-semibold text-purple-900 mb-2">
                         Course Duration
                       </h4>
-                      <p className="text-gray-700">3 months intensive training</p>
+                      <p className="text-gray-700">
+                        3 months intensive training
+                      </p>
                       <p className="text-purple-600 mt-1">
                         <IconWrapper
                           icon={Globe}
@@ -531,6 +543,15 @@ export default function Home() {
                       </ul>
                     </div>
                   </div>
+                  <Button
+                    className="w-full mt-6 bg-purple-600 hover:bg-purple-700 text-white"
+                    onClick={() => {
+                      setFormData({ ...formData, track: "frontend" });
+                      document.getElementById("mainRegisterButton")?.click();
+                    }}
+                  >
+                    Register for Frontend Track
+                  </Button>
                 </div>
               </div>
 
@@ -568,7 +589,7 @@ export default function Home() {
                       <h3 className="text-xl font-semibold text-purple-900">
                         Venue
                       </h3>
-                      <p className="text-gray-700">University of Lagos</p>
+                      <p className="text-gray-700">University of Lagos/Online</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
@@ -581,8 +602,8 @@ export default function Home() {
                         Important Dates
                       </h3>
                       <ul className="text-gray-700 space-y-2">
-                        <li>Orientation: May 31st, 2025</li>
-                        <li>Classes Begin: June 2nd, 2025</li>
+                        <li>Orientation: June 14th, 2025</li>
+                        <li>Classes Begin: June 16th, 2025</li>
                       </ul>
                     </div>
                   </div>
