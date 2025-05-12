@@ -1,6 +1,6 @@
 "use client"
 
-import type { JSX } from "react";
+import { useForm } from "@formspree/react";
 import React, { useState, useEffect } from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -49,6 +49,7 @@ export default function Home() {
     email: "",
     phone: "",
     age: "",
+    track: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
@@ -111,16 +112,30 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [targetDate]); // Add targetDate as dependency
 
+  const [formspreeState, submitToFormspree] = useForm("mdkgwoej");
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // Here you would typically send the data to your backend
+  //   setIsSubmitted(true);
+  //   toast({
+  //     title: "Registration Successful!",
+  //     description: "Redirecting to confirmation page...",
+  //   });
+  //   // Navigate to success page
+  //   // window.location.href = "/success";
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    setIsSubmitted(true);
-    toast({
-      title: "Registration Successful!",
-      description: "Redirecting to confirmation page...",
-    });
-    // Navigate to success page
-    // window.location.href = "/success";
+    await submitToFormspree(formData);
+    if (formspreeState.succeeded) {
+      setIsSubmitted(true);
+      toast({
+        title: "Registration Successful!",
+        description: "Redirecting to confirmation page...",
+      });
+    }
   };
 
   const handlePayment = async () => {
@@ -266,6 +281,23 @@ export default function Home() {
                           required
                         />
                       </div>
+
+                      <div className="space-y-2">
+  <Label htmlFor="track">Select Track</Label>
+  <select
+    id="track"
+    value={formData.track}
+    onChange={(e) =>
+      setFormData({ ...formData, track: e.target.value })
+    }
+    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    required
+  >
+    <option value="">Select a track</option>
+    <option value="frontend">Frontend Development</option>
+    <option value="uiux">UI/UX Design</option>
+  </select>
+</div>
                       <div className="space-y-2">
                         <Label htmlFor="age">Age</Label>
                         <Input
